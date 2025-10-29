@@ -82,10 +82,7 @@ const Footer = () => {
     <a href="tel:+918940088143" className="hover:text-[#48b06c]">
       +91 89400 88143
     </a>
-    <span className="mx-1">/</span>
-    <a href="tel:+918940088143" className="hover:text-[#48b06c]">
-      +91 89400 88143
-    </a>
+   
   </li>
   <li className="flex items-center gap-2">
     <Mail className="text-[#48b06c]" size={18} />

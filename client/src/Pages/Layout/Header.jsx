@@ -105,12 +105,7 @@ const Header = () => {
                 >
                   +91 89400 88143
                 </a>
-                <a
-                  href="tel:+918940088143"
-                  className="hover:underline text-white"
-                >
-                  +91 89400 88143
-                </a>
+                
               </div>
             </div>
           </div>

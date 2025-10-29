@@ -162,7 +162,7 @@ const Hero = () => {
           >
             {slide.description}
           </motion.p>
-          <motion.a
+          {/* <motion.a
             href={slide.buttonLink}
             variants={mainButtonVariants}
             initial="initial"
@@ -171,7 +171,7 @@ const Hero = () => {
             className="px-8 py-3 rounded-md font-semibold text-lg text-white"
           >
             {slide.buttonText}
-          </motion.a>
+          </motion.a> */}
         </motion.div>
       </div>
 
