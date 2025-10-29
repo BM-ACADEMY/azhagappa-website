@@ -6,20 +6,20 @@ import LinkedinIcon from "@/assets/logo/youtube.png";
 const SocialSidebar = () => {
   const socialLinks = [
     {
-      href: "https://facebook.com",
+      href: "https://www.facebook.com/profile.php?id=61578951390285",
       icon: FacebookIcon,
       alt: "Facebook",
     },
     {
-      href: "https://instagram.com",
+      href: "https://www.instagram.com/azhagappa_university?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
       icon: InstagramIcon,
       alt: "Instagram",
     },
-    {
-      href: "https://linkedin.com",
-      icon: LinkedinIcon,
-      alt: "LinkedIn",
-    },
+    // {
+    //   href: "https://linkedin.com",
+    //   icon: LinkedinIcon,
+    //   alt: "LinkedIn",
+    // },
   ];
 
   return (
