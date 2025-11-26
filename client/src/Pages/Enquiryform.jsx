@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 
 // Course Data Organized
 const courseData = {
@@ -150,36 +151,44 @@ export function EnquiryFormModal({ isOpen, onOpenChange }) {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    try {
-      const response = await fetch("https://azhagappa-website.onrender.com/send-email", {
-        method: "POST",
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  try {
+    const response = await axios.post(
+      "https://azhagappa-website.onrender.com/send-email",
+      formData, // no JSON.stringify needed
+      {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        console.log("Email sent successfully!");
-        toast.success("Your enquiry has been submitted successfully!");
-        setFormData(initialFormData); // Clear the form fields
-        onOpenChange(false); // Close the modal
-      } else {
-        const errorData = await response.json();
-        console.error("Error sending email:", errorData.message);
-        toast.error(`Failed to send enquiry: ${errorData.message}`);
       }
-    } catch (error) {
-      console.error("Submission error:", error);
-      toast.error("An error occurred. Please try again later.");
-    } finally {
-      setIsSubmitting(false);
+    );
+
+    console.log("Email sent successfully!");
+    toast.success("Your enquiry has been submitted successfully!");
+    setFormData(initialFormData); // Clear the form
+    onOpenChange(false); // Close modal
+
+  } catch (error) {
+    // Axios error handling
+    if (error.response) {
+      console.error("Error Response:", error.response.data);
+      toast.error(
+        `Failed to send enquiry: ${error.response.data.message || "Server error"}`
+      );
+    } else if (error.request) {
+      console.error("No Response:", error.request);
+      toast.error("No response from server. Please try again later.");
+    } else {
+      console.error("Error:", error.message);
+      toast.error("Something went wrong. Please try again.");
     }
-  };
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const selectedCourseGroups = formData.university
     ? courseData[formData.university]
