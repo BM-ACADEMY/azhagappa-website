@@ -1,5 +1,5 @@
 import { useState } from "react";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 
-// Course Data Organized
+// Course Data
 const courseData = {
   Alagappa: {
     UG: [
@@ -129,6 +129,7 @@ const courseData = {
   },
 };
 
+
 const initialFormData = {
   name: "",
   email: "",
@@ -144,6 +145,7 @@ export function EnquiryFormModal({ isOpen, onOpenChange }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     if (name === "university") {
       setFormData({ ...formData, university: value, course: "" });
     } else {
@@ -151,151 +153,126 @@ export function EnquiryFormModal({ isOpen, onOpenChange }) {
     }
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  try {
-    const response = await axios.post(
-      "https://azhagappa-website.onrender.com/send-email",
-      formData, // no JSON.stringify needed
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    console.log("Email sent successfully!");
-    toast.success("Your enquiry has been submitted successfully!");
-    setFormData(initialFormData); // Clear the form
-    onOpenChange(false); // Close modal
-
-  } catch (error) {
-    // Axios error handling
-    if (error.response) {
-      console.error("Error Response:", error.response.data);
-      toast.error(
-        `Failed to send enquiry: ${error.response.data.message || "Server error"}`
+    try {
+      await axios.post(
+        "https://azhagappa-website-1.onrender.com/send-email",
+        formData,
+        { headers: { "Content-Type": "application/json" } }
       );
-    } else if (error.request) {
-      console.error("No Response:", error.request);
-      toast.error("No response from server. Please try again later.");
-    } else {
-      console.error("Error:", error.message);
-      toast.error("Something went wrong. Please try again.");
+
+      toast.success("Your enquiry has been submitted successfully!");
+      setFormData(initialFormData);
+      onOpenChange(false);
+    } catch (error) {
+      toast.error("Failed to send enquiry. Try again later.");
+    } finally {
+      setIsSubmitting(false);
     }
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   const selectedCourseGroups = formData.university
     ? courseData[formData.university]
     : {};
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[90vw] sm:max-w-md md:max-w-lg max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Enquiry Form</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-1">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
+    <>
+      <Toaster position="top-right" />
 
-          <div className="space-y-1">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
+      <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <DialogContent
+          className="
+            w-[95vw] max-w-md sm:max-w-lg md:max-w-xl
+            max-h-[90vh] overflow-y-auto
+            p-4 sm:p-6
+          "
+        >
+          <DialogHeader>
+            <DialogTitle className="text-lg sm:text-xl font-semibold text-center">
+              Enquiry Form
+            </DialogTitle>
+          </DialogHeader>
 
-          <div className="space-y-1">
-            <Label htmlFor="mobile">Mobile Number</Label>
-            <Input
-              id="mobile"
-              name="mobile"
-              value={formData.mobile}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="space-y-1">
-            <Label htmlFor="university">University</Label>
-            <select
-              id="university"
-              name="university"
-              value={formData.university}
-              onChange={handleChange}
-              required
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            >
-              <option value="">Select University</option>
-              <option value="Alagappa">Alagappa University</option>
-              <option value="Bharathidasan">Bharathidasan University</option>
-            </select>
-          </div>
-
-          {formData.university && (
+          <form onSubmit={handleSubmit} className="space-y-4 mt-3">
             <div className="space-y-1">
-              <Label htmlFor="course">Course Interested (Select One)</Label>
+              <Label>Name</Label>
+              <Input name="name" value={formData.name} onChange={handleChange} required />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label>Email</Label>
+                <Input type="email" name="email" value={formData.email} onChange={handleChange} required />
+              </div>
+
+              <div className="space-y-1">
+                <Label>Mobile Number</Label>
+                <Input name="mobile" value={formData.mobile} onChange={handleChange} required />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <Label>University</Label>
               <select
-                id="course"
-                name="course"
-                value={formData.course}
+                name="university"
+                value={formData.university}
                 onChange={handleChange}
                 required
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                style={{ maxHeight: "10rem", overflowY: "auto" }}
+                className="w-full border rounded px-3 py-2 text-sm"
               >
-                <option value="">Select Course</option>
-                {Object.entries(selectedCourseGroups).map(([category, courses]) =>
-                  courses.length > 0 ? (
-                    <optgroup key={category} label={category}>
-                      {courses.map((course, idx) => (
-                        <option key={idx} value={`${category} – ${course}`}>
-                          {course}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ) : null
-                )}
+                <option value="">Select University</option>
+                <option value="Alagappa">Alagappa University</option>
+                <option value="Bharathidasan">Bharathidasan University</option>
               </select>
             </div>
-          )}
 
-          <div className="space-y-1">
-            <Label htmlFor="message">Message</Label>
-            <Textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              placeholder="Type your message..."
-              required
-            />
-          </div>
+            {formData.university && (
+              <div className="space-y-1">
+                <Label>Course Interested</Label>
+                <select
+                  name="course"
+                  value={formData.course}
+                  onChange={handleChange}
+                  required
+                  className="w-full border rounded px-3 py-2 text-sm"
+                  style={{ maxHeight: "12rem", overflowY: "auto" }}
+                >
+                  <option value="">Select Course</option>
+                  {Object.entries(selectedCourseGroups).map(([category, courses]) =>
+                    courses.length > 0 ? (
+                      <optgroup key={category} label={category}>
+                        {courses.map((course, index) => (
+                          <option key={index} value={`${category} – ${course}`}>
+                            {course}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ) : null
+                  )}
+                </select>
+              </div>
+            )}
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Submit"}
-          </Button>
-        </form>
-      </DialogContent>
-    </Dialog>
+            <div className="space-y-1">
+              <Label>Message</Label>
+              <Textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                placeholder="Type your message..."
+              />
+            </div>
+
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : "Submit"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

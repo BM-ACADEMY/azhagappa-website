@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: [process.env.CLIENT_URL, "https://pravishrajacademy.com", "http://localhost:5173"], // Added localhost for testing
+  origin: [process.env.CLIENT_URL,], // Added localhost for testing
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"],
   credentials: true
