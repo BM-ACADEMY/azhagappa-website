@@ -1,15 +1,19 @@
 const nodemailer = require('nodemailer');
 
 const sendMail = async (name, email, phone, university, course, message) => {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: false,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+ const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  }
+});
+
 
   const ownerMailOptions = {
     from: `"Pravishraj Memorial Academy" <${process.env.EMAIL_USER}>`,
